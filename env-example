@@ -1,0 +1,2 @@
+DATABASE_URL="mysql://root:root@localhost:3306/burger?connection_limit=5"
+CUSTOM_JWT_KEY="3e187bdd774a8807b444191658bf8be5"
