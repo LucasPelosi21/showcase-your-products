@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { validateBody } from '../middlewares/ValidateBodyMiddleware';
 import UserController from '../controllers/UserController';
 import { validate } from '../middlewares/AuthMiddleware';
-import { storeUserSchema } from '../schemas/UserSchema';
+import { storeUserSchema, updateUserSchema } from '../schemas/UserSchema';
 
 export default class UserRouter {
   private controller: UserController;
@@ -16,7 +16,12 @@ export default class UserRouter {
     router.get('', validate, this.controller.list);
     router.get('/:id', validate, this.controller.show);
     router.post('', validateBody(storeUserSchema), this.controller.store);
-    router.put('/:id', validate, this.controller.update);
+    router.put(
+      '/:id',
+      validate,
+      validateBody(updateUserSchema),
+      this.controller.update,
+    );
     router.delete('/:id', validate, this.controller.remove);
     return router;
   };

@@ -19,24 +19,26 @@ export default class UserService {
   public list = async (): Promise<User[]> => this.prisma.user.findMany();
 
   public store = async (data: User): Promise<User> => {
-    await bcrypt
-      .hash(data.password, this.saltRounds)
-      // eslint-disable-next-line
-      .then(hash => (data.password = hash));
-    const createUser = await this.prisma.user.create({ data });
+    const createData = { ...data };
+    await bcrypt.hash(createData.password, this.saltRounds).then(hash => {
+      createData.password = hash;
+    });
+
+    const createUser = await this.prisma.user.create({ data: createData });
     return createUser;
   };
 
   public update = async (id: number, data: User): Promise<User> => {
-    await bcrypt
-      .hash(data.password, this.saltRounds)
-      // eslint-disable-next-line
-      .then(hash => (data.password = hash));
+    const updateData = { ...data };
+    await bcrypt.hash(updateData.password, this.saltRounds).then(hash => {
+      updateData.password = hash;
+    });
+
     const updateUser = await this.prisma.user.update({
       where: {
         id,
       },
-      data,
+      data: updateData,
     });
     return updateUser;
   };
